@@ -23,7 +23,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="授课科目" prop="subjectId">
+      <el-form-item label="授课科目" prop="subjectIds">
         <el-select v-model="formData.subjectIds" multiple placeholder="请选择">
           <el-option
             v-for="item in subjectList"
@@ -33,10 +33,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="基本工资" prop="sort">
+      <el-form-item label="基本工资" prop="basicSalary">
         <el-input-number v-model="formData.basicSalary" :min="0" :precision="2" :step="0.1"/>
       </el-form-item>
-      <el-form-item label="课时单价" prop="sort">
+      <el-form-item label="课时单价" prop="courseSalary">
         <el-input-number v-model="formData.courseSalary" :min="0" :precision="2" :step="0.1" />
       </el-form-item>
     </el-form>
@@ -73,7 +73,8 @@ const formData = ref({
 const formRules = reactive({
   name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
   status: [{ required: true, message: '状态不能为空', trigger: 'change' }],
-  sort: [{ required: true, message: '显示顺序不能为空', trigger: 'change' }]
+  sort: [{ required: true, message: '显示顺序不能为空', trigger: 'change' }],
+  subjectIds: [{ required: true, message: '授课科目不能为空', trigger: 'change' }]
 })
 const formRef = ref() // 表单 Ref
 const subjectList = ref([] as SubjectVO[]) // 科目列表
