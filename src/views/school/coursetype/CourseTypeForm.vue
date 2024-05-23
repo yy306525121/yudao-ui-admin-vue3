@@ -7,8 +7,11 @@
       label-width="100px"
       v-loading="formLoading"
     >
-      <el-form-item label="科目名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入科目名称" />
+      <el-form-item label="课程类型" prop="name">
+        <el-input v-model="formData.name" placeholder="请输入课程类型名称" />
+      </el-form-item>
+      <el-form-item label="课时数" prop="num">
+        <el-input-number v-model="formData.num" :min="0" :precision="1" :step="0.1" controls-position="right" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" controls-position="right" />
@@ -21,10 +24,10 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { SubjectApi, SubjectVO } from '@/api/school/subject'
+import { CourseTypeApi, CourseTypeVO } from '@/api/school/coursetype'
 
-/** 科目信息 表单 */
-defineOptions({ name: 'SubjectForm' })
+/** 课程类型 表单 */
+defineOptions({ name: 'CourseTypeForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -36,10 +39,12 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   name: undefined,
+  num: undefined,
   sort: 0
 })
 const formRules = reactive({
-  name: [{ required: true, message: '科目名称不能为空', trigger: 'blur' }]
+  name: [{ required: true, message: '课程类型名称不能为空', trigger: 'blur' }],
+  num: [{ required: true, message: '每一节该类型的课按多少课时算不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 
@@ -53,7 +58,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await SubjectApi.getSubject(id)
+      formData.value = await CourseTypeApi.getCourseType(id)
     } finally {
       formLoading.value = false
     }
@@ -69,12 +74,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as SubjectVO
+    const data = formData.value as unknown as CourseTypeVO
     if (formType.value === 'create') {
-      await SubjectApi.createSubject(data)
+      await CourseTypeApi.createCourseType(data)
       message.success(t('common.createSuccess'))
     } else {
-      await SubjectApi.updateSubject(data)
+      await CourseTypeApi.updateCourseType(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -90,6 +95,7 @@ const resetForm = () => {
   formData.value = {
     id: undefined,
     name: undefined,
+    num: undefined,
     sort: 0
   }
   formRef.value?.resetFields()
