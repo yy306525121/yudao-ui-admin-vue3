@@ -104,8 +104,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await TimeSlotApi.getTimeSlotList(queryParams)
-    list.value = data.list
+    list.value = await TimeSlotApi.getTimeSlotList(queryParams)
   } finally {
     loading.value = false
   }

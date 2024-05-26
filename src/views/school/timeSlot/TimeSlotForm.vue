@@ -25,6 +25,7 @@
           @change="timeChange"
           v-model="formData.timeRange"
           is-range
+          format="HH:mm"
           type="date"
           value-format="HH:mm"
           range-separator="到"
@@ -79,6 +80,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await TimeSlotApi.getTimeSlot(id)
+      formData.value.timeRange = [formData.value.startTime, formData.value.endTime]
     } finally {
       formLoading.value = false
     }
