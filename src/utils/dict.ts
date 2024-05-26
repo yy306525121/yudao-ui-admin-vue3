@@ -215,4 +215,7 @@ export enum DICT_TYPE {
 
   // ========== SCHOOL - 学校模块  ==========
   TIME_SLOT_TYPE = 'time_slot_type', // ERP 审批状态
+
+  // ========== SCHOOL - 课程计划模块  ==========
+  COURSE_PLAN_QUERY_TYPE = 'course_plan_query_type', // ERP 审批状态
 }

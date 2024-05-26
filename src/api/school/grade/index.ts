@@ -20,6 +20,10 @@ export const GradeApi = {
     return await request.get({ url: `/school/grade/tree` })
   },
 
+  getSimpleGradeList: async (): Promise<GradeVO[]> => {
+    return await request.get({ url: `/school/grade/simple-list` })
+  },
+
   // 查询班级详情
   getGrade: async (id: number) => {
     return await request.get({ url: `/school/grade/get?id=` + id })

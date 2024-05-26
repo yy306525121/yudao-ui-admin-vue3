@@ -437,3 +437,41 @@ export const ErpBizType = {
   SALE_OUT: 21,
   SALE_RETURN: 22
 }
+
+
+// ========== School - 学校 ==========
+/**
+ * 课程类型枚举
+ */
+export const CourseTypeEnum = {
+  MORNING: {
+    type: 1,
+    name: '早自习'
+  },
+  NORMAL: {
+    type: 2,
+    name: '正课'
+  },
+  STUDY_SELF: {
+    type: 3,
+    name: '自习课'
+  },
+  EVENING: {
+    type: 4,
+    name: '晚自习'
+  }
+}
+
+/**
+ * 课程计划查询类型
+ */
+export const CoursePlanQueryTypeEnum = {
+  GRADE: {
+    value: 1,
+    name: '按年级查询'
+  },
+  TEACHER: {
+    value: 2,
+    name: '按教师查询'
+  }
+}

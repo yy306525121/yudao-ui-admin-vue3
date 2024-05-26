@@ -1,4 +1,5 @@
 import request from '@/config/axios'
+import {GradeVO} from "@/api/school/grade";
 
 export interface TeacherVO {
   id?: number
@@ -18,6 +19,10 @@ export const getTeacherPage = async (params: PageParam) => {
 // 查询教师详情
 export const getTeacher = async (id: number) => {
   return await request.get({ url: '/school/teacher/get?id=' + id })
+}
+
+export const getSimpleTeacherList = async (): Promise<GradeVO[]> => {
+  return await request.get({ url: `/school/teacher/simple-list` })
 }
 
 // 新增教师

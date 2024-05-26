@@ -4,6 +4,7 @@ import request from '@/config/axios'
 export interface CourseTypeVO {
   id: number // 主键
   name: string // 课程类型名称
+  type: number
   num: number // 每一节该类型的课按多少课时算
 }
 
