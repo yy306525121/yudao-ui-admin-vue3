@@ -72,13 +72,22 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button
+          type="danger"
+          plain
+          @click="handleChange"
+          :loading="changeLoading"
+          v-hasPermi="['school:course-plan:change']"
+        >
+          <Icon icon="ep:switch" class="mr-5px" /> 调整
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
 
   <!-- 列表 -->
   <ContentWrap>
-    <CourseTable :data="list" :loading="loading"/>
+    <CourseTable :data="list" :loading="loading" :data-type="queryParams.queryType"/>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -116,6 +125,7 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
+const changeLoading = ref(false) // 调整的加载中
 
 /** 查询列表 */
 const getList = async () => {
@@ -177,6 +187,16 @@ const handleExport = async () => {
   } catch {
   } finally {
     exportLoading.value = false
+  }
+}
+
+/** 调整按钮操作 */
+const handleChange = async () => {
+  try {
+
+  } catch {
+  }finally {
+    changeLoading.value = false
   }
 }
 

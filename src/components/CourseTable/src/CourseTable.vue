@@ -1,5 +1,12 @@
 <template>
-  <el-table v-loading="loading" :data="rowList" :span-method="objectSpanMethod" :stripe="true" :show-overflow-tooltip="true" :border="true">
+  <el-table
+    v-loading="loading"
+    :data="rowList"
+    :span-method="objectSpanMethod"
+    :stripe="true"
+    :show-overflow-tooltip="true"
+    :border="true"
+    @cell-dblclick="handleChangeCourse">
     <el-table-column label="时间" align="center" prop="duration"/>
     <el-table-column label="节次" align="center" prop="sort">
       <template #default="scope">
@@ -10,7 +17,12 @@
       <template #default="scope">
         {{getSubjectName(scope.column, scope.row)}}
         <br/>
+        <span v-if="dataType == CoursePlanQueryTypeEnum.GRADE.value">
         {{getTeacherName(scope.column, scope.row)}}
+        </span>
+        <span v-if="dataType == CoursePlanQueryTypeEnum.TEACHER.value">
+          {{getGradeName(scope.column, scope.row)}}
+        </span>
       </template>
     </el-table-column>
   </el-table>
@@ -20,7 +32,7 @@
 
 import {PropType} from "vue";
 import {CoursePlanVO} from "@/api/school/coursePlan";
-import {WeekEnum} from "@/utils/constants";
+import {CoursePlanQueryTypeEnum, WeekEnum} from "@/utils/constants";
 
 defineOptions({ name: 'CourseTable' })
 
@@ -33,10 +45,15 @@ const props = defineProps({
     required: true,
     type: Array as PropType<CoursePlanVO[]>,
     default: () => []
+  },
+  dataType: {
+    // 数据是按班级查询的还是按教师查询的
+    required: true,
+    type: Number,
   }
 })
 
-const emit = defineEmits(['update:loading', 'update:data'])
+const emit = defineEmits(['update:loading', 'update:data', 'update:dataType'])
 
 const rowList = ref([
   {duration: '早自习', sort: 1},
@@ -68,6 +85,14 @@ const dataList = computed({
   },
   set(val) {
     emit('update:data', val)
+  }
+})
+const dataType = computed({
+  get() {
+    return props.dataType
+  },
+  set(val) {
+    emit('update:dataType', val)
   }
 })
 
@@ -104,11 +129,21 @@ const objectSpanMethod = ({
     }
   }
 }
-const getSubjectName = (column: any, row: any) => {
-  debugger
+const getGradeName = (column: any, row: any) => {
   if (!column.label) {return ''}
   const week = getWeekValue(column.label)
-  const coursePlan = filterData(week, row)
+  const coursePlan = filterData(week, row.sort)
+  if (coursePlan && coursePlan.grade) {
+    return coursePlan.grade.name
+  } else {
+    return ''
+  }
+}
+
+const getSubjectName = (column: any, row: any) => {
+  if (!column.label) {return ''}
+  const week = getWeekValue(column.label)
+  const coursePlan = filterData(week, row.sort)
   if (coursePlan && coursePlan.subject) {
     return coursePlan.subject.name
   } else {
@@ -119,7 +154,7 @@ const getSubjectName = (column: any, row: any) => {
 const getTeacherName = (column: any, row: any) => {
   if (!column.label) {return ''}
   const week = getWeekValue(column.label)
-  const coursePlan = filterData(week, row)
+  const coursePlan = filterData(week, row.sort)
   if (coursePlan && coursePlan.teacher) {
     return coursePlan.teacher.name
   } else {
@@ -127,8 +162,8 @@ const getTeacherName = (column: any, row: any) => {
   }
 }
 
-const filterData = (column, row) => {
-  const coursePlanList = dataList.value.filter(item => item.week === column && item.timeSlot.sort === row.sort)
+const filterData = (week: number, sort: number) => {
+  const coursePlanList = dataList.value.filter(item => item.week === week && item.timeSlot.sort === sort)
   if (coursePlanList.length > 0) {
     return coursePlanList[0]
   } else {
@@ -136,7 +171,7 @@ const filterData = (column, row) => {
   }
 }
 
-const getWeekName = (value) => {
+const getWeekName = (value: number) => {
   for (let key in WeekEnum) {
     if (WeekEnum[key].value === value) {
       return WeekEnum[key].name
@@ -145,13 +180,25 @@ const getWeekName = (value) => {
   return ''
 }
 
-const getWeekValue = (name) => {
+const getWeekValue = (name: string) => {
   for (let key in WeekEnum) {
     if (WeekEnum[key].name === name) {
       return WeekEnum[key].value
     }
   }
   return ''
+}
+
+const handleChangeCourse = (row: any, column: any, cell: HTMLTableCellElement) => {
+  console.log('row=', row)
+  console.log('column=', column)
+  console.log('cell=', cell)
+  debugger
+  const rowIndex = row.sort
+  const week = getWeekValue(column.label)
+  if (rowIndex && week ) {
+    console.log("true")
+  }
 }
 </script>
 
