@@ -32,7 +32,8 @@
           v-model="queryParams.gradeId"
           :data="gradeList"
           :props="defaultProps"
-          check-strictly
+          default-expand-all
+          :render-after-expand="false"
           node-key="id"
           placeholder="请选择年级"
           class="!w-240px"
