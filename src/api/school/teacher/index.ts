@@ -1,5 +1,4 @@
 import request from '@/config/axios'
-import {GradeVO} from "@/api/school/grade";
 
 export interface TeacherVO {
   id?: number
@@ -21,7 +20,7 @@ export const getTeacher = async (id: number) => {
   return await request.get({ url: '/school/teacher/get?id=' + id })
 }
 
-export const getSimpleTeacherList = async (): Promise<GradeVO[]> => {
+export const getSimpleTeacherList = async (): Promise<TeacherVO[]> => {
   return await request.get({ url: `/school/teacher/simple-list` })
 }
 

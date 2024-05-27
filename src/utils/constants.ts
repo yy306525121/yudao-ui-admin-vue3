@@ -475,3 +475,35 @@ export const CoursePlanQueryTypeEnum = {
     name: '按教师查询'
   }
 }
+
+
+export const WeekEnum = {
+  MONDAY: {
+    value: 1,
+    name: '周一'
+  },
+  TUESDAY: {
+    value: 2,
+    name: '周二'
+  },
+  WEDNESDAY: {
+    value: 3,
+    name: '周三'
+  },
+  THURSDAY: {
+    value: 4,
+    name: '周四'
+  },
+  FRIDAY: {
+    value: 5,
+    name: '周五'
+  },
+  SATURDAY: {
+    value: 6,
+    name: '周六'
+  },
+  SUNDAY: {
+    value: 7,
+    name: '周日'
+  }
+}

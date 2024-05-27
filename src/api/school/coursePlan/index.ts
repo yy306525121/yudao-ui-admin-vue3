@@ -1,16 +1,19 @@
 import request from '@/config/axios'
+import {CourseTypeVO} from "@/api/school/coursetype";
+import {GradeVO} from "@/api/school/grade";
+import {SubjectVO} from "@/api/school/subject";
+import {TeacherVO} from "@/api/school/teacher";
+import {TimeSlotVO} from "@/api/school/timeSlot";
 
 // 课程计划 VO
 export interface CoursePlanVO {
   id: number // 主键
   week: number // 星期
-  gradeId: number // 年级
-  courseTypeId: number // 课程类型
-  subjectId: number // 科目
-  teacherId: number // 教师
-  timeSlotId: number // 课程节次
-  start: Date // 课程生效日期
-  end: Date // 课程失效日期
+  courseType: CourseTypeVO
+  grade: GradeVO
+  subject: SubjectVO
+  teacher: TeacherVO
+  timeSlot: TimeSlotVO
 }
 
 // 课程计划 API
