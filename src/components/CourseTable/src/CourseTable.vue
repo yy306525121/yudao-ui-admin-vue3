@@ -53,7 +53,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:loading', 'update:data', 'update:dataType'])
+const emit = defineEmits(['update:loading', 'update:data', 'update:dataType', 'data:click'])
 
 const rowList = ref([
   {duration: '早自习', sort: 1},
@@ -189,15 +189,11 @@ const getWeekValue = (name: string) => {
   return ''
 }
 
-const handleChangeCourse = (row: any, column: any, cell: HTMLTableCellElement) => {
-  console.log('row=', row)
-  console.log('column=', column)
-  console.log('cell=', cell)
-  debugger
-  const rowIndex = row.sort
+const handleChangeCourse = (row: any, column: any) => {
+  const sort = row.sort
   const week = getWeekValue(column.label)
-  if (rowIndex && week ) {
-    console.log("true")
+  if (sort && week ) {
+    emit('data:click', week, sort)
   }
 }
 </script>

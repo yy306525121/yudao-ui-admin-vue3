@@ -15,6 +15,10 @@ export const CourseTypeApi = {
     return await request.get({ url: `/school/course-type/page`, params })
   },
 
+  getSimpleCourseTypeList: async (): Promise<CourseTypeVO[]> => {
+    return await request.get({ url: `/school/course-type/simple-list` })
+  },
+
   // 查询课程类型详情
   getCourseType: async (id: number) => {
     return await request.get({ url: `/school/course-type/get?id=` + id })

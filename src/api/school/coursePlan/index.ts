@@ -16,6 +16,19 @@ export interface CoursePlanVO {
   timeSlot: TimeSlotVO
 }
 
+export interface CoursePlanChangeVO {
+  id: number
+  gradeId: number
+  week: number
+  timeSlotId: number
+  fromTeacherId: number
+  toTeacherId: number
+  fromSubjectId: number
+  toSubjectId: number
+  fromCourseTypeId: number
+  toCourseTypeId: number
+}
+
 // 课程计划 API
 export const CoursePlanApi = {
   // 查询课程计划分页
@@ -28,14 +41,9 @@ export const CoursePlanApi = {
     return await request.get({ url: `/school/course-plan/get?id=` + id })
   },
 
-  // 新增课程计划
-  createCoursePlan: async (data: CoursePlanVO) => {
-    return await request.post({ url: `/school/course-plan/create`, data })
-  },
-
   // 修改课程计划
-  updateCoursePlan: async (data: CoursePlanVO) => {
-    return await request.put({ url: `/school/course-plan/update`, data })
+  changeCoursePlan: async (data: CoursePlanChangeVO) => {
+    return await request.post({ url: `/school/course-plan/change`, data })
   },
 
   // 删除课程计划

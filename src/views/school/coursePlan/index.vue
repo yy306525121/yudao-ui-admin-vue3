@@ -48,14 +48,6 @@
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
         <el-button
-          type="primary"
-          plain
-          @click="openForm('create')"
-          v-hasPermi="['school:course-plan:create']"
-        >
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
-        </el-button>
-        <el-button
           type="warning"
           plain
           @click="handleImport"
@@ -72,22 +64,13 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button
-          type="danger"
-          plain
-          @click="handleChange"
-          :loading="changeLoading"
-          v-hasPermi="['school:course-plan:change']"
-        >
-          <Icon icon="ep:switch" class="mr-5px" /> 调整
-        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
 
   <!-- 列表 -->
   <ContentWrap>
-    <CourseTable :data="list" :loading="loading" :data-type="queryParams.queryType"/>
+    <CourseTable :data="list" :loading="loading" :data-type="queryParams.queryType" @data:click="openForm"/>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -125,7 +108,6 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const changeLoading = ref(false) // 调整的加载中
 
 /** 查询列表 */
 const getList = async () => {
@@ -165,8 +147,13 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (week: number, sort: number) => {
+  if (list.value.length > 0) {
+    const data = filterData(week, sort)
+    if (data) {
+      formRef.value.open(data.id)
+    }
+  }
 }
 
 /** 课程导入操作 */
@@ -190,13 +177,13 @@ const handleExport = async () => {
   }
 }
 
-/** 调整按钮操作 */
-const handleChange = async () => {
-  try {
-
-  } catch {
-  }finally {
-    changeLoading.value = false
+/** 通过周和课程节次获取课程信息 */
+const filterData = (week: number, sort: number) => {
+  const coursePlanList = list.value.filter(item => item.week === week && item.timeSlot.sort === sort)
+  if (coursePlanList.length > 0) {
+    return coursePlanList[0]
+  } else {
+    return undefined
   }
 }
 
