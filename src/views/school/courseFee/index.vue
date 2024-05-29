@@ -12,11 +12,16 @@
         <el-date-picker
           v-model="queryParams.date"
           value-format="YYYY-MM-DD"
-          type="date"
+          type="month"
           placeholder="选择月份"
           clearable
           class="!w-240px"
         />
+      </el-form-item>
+      <el-form-item label="教师" prop="teacherId">
+        <el-select v-model="queryParams.teacherId" placeholder="请选择" class="!w-240px" clearable filterable>
+          <el-option v-for="item in teacherList" :key="item.id" :label="item.name" :value="item.id ?? ''"/>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
@@ -25,9 +30,9 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['school:course-fee:create']"
+          v-hasPermi="['school:course-fee:calculate']"
         >
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
+          <Icon icon="ep:plus" class="mr-5px" /> 计算
         </el-button>
         <el-button
           type="success"
@@ -45,14 +50,8 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="教师" align="center" prop="teacher.name" />
       <el-table-column label="课时费" align="center" prop="count" />
-      <el-table-column label="教师编号" align="center" prop="teacherId" />
-      <el-table-column label="班级编号" align="center" prop="gradeId" />
-      <el-table-column label="课程ID" align="center" prop="subjectId" />
-      <el-table-column label="星期" align="center" prop="week" />
-      <el-table-column label="课程节次编号" align="center" prop="timeSlotId" />
-      <el-table-column label="日期" align="center" prop="date" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
@@ -91,6 +90,8 @@
 import download from '@/utils/download'
 import { CourseFeeApi, CourseFeeVO } from '@/api/school/courseFee'
 import CourseFeeForm from './CourseFeeForm.vue'
+import {formatToDate} from "@/utils/dateUtil";
+import * as TeacherApi from "@/api/school/teacher";
 
 /** 课时费明细 列表 */
 defineOptions({ name: 'CourseFee' })
@@ -100,11 +101,13 @@ const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
 const list = ref<CourseFeeVO[]>([]) // 列表的数据
+const teacherList = ref<TeacherApi.TeacherVO[]>([]) //教师列表
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  date: undefined
+  date: formatToDate(new Date()),
+  teacherId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -167,8 +170,13 @@ const handleExport = async () => {
   }
 }
 
+const initData = async () => {
+    teacherList.value = await TeacherApi.getSimpleTeacherList()
+}
+
 /** 初始化 **/
 onMounted(() => {
+  initData()
   getList()
 })
 </script>
