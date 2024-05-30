@@ -7,12 +7,24 @@
       <template #date-cell="{ data }">
         <p :class="data.isSelected ? 'is-selected' : ''">
           {{ data.day.split('-')[2] }}
-          <el-tag class="ml-2" type="success" v-if="data.type == 'current-month' && dataList.includes(data.day)" @click="showDay">
-            {{getCourseFeeCount(data.day)}}课时
-          </el-tag>
+          <!--  {{ data.isSelected ? '你好啊' : '' }}-->
           <br/>
           <br/>
-          {{ data.isSelected ? '你好啊' : '' }}
+
+          <el-tooltip class="box-item" effect="dark" placement="top-start">
+            <template #content>
+              {{ data.day }}
+              <br/>
+              345
+            </template>
+            <span>
+              <el-tag class="ml-2" type="success"
+                      v-if="data.type == 'current-month' && dataList.includes(data.day)">
+                {{ getCourseFeeCount(data.day) }}课时
+              </el-tag>
+              </span>
+          </el-tooltip>
+
         </p>
       </template>
     </el-calendar>
@@ -22,7 +34,7 @@
 import {CourseFeeApi, CourseFeeDetailListVO} from '@/api/school/courseFee'
 
 /** 课时费计算 表单 */
-defineOptions({ name: 'CalculateFeeDetail' })
+defineOptions({name: 'CalculateFeeDetail'})
 
 const monthDate = ref(null as any)
 const list = ref<CourseFeeDetailListVO[]>([]) //每天的课时费列表
@@ -46,7 +58,7 @@ const open = async (teacherId: number, date: string) => {
     loading.value = false
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+defineExpose({open}) // 提供 open 方法，用于打开弹窗
 
 const getCourseFeeCount = (date: string) => {
   const dateItem = list.value.find(item => item.date == date)
@@ -57,8 +69,9 @@ const getCourseFeeCount = (date: string) => {
   }
 }
 
-const showDay = () => {
-  console.log('aaaaa')
+const showDay = (date: Date) => {
+  console.log(date)
+  return '111\n222'
 }
 </script>
 
