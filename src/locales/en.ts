@@ -453,5 +453,8 @@ export default {
     btn_zoom_in: 'Zoom in',
     btn_zoom_out: 'Zoom out',
     preview: 'Preivew'
+  },
+  calculate: {
+    success: '计算成功'
   }
 }

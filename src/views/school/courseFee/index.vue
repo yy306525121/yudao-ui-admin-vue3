@@ -57,18 +57,10 @@
           <el-button
             link
             type="primary"
-            @click="openForm('update', scope.row.id)"
+            @click="openDetailDialog(scope.row.teacher.id, queryParams.date)"
             v-hasPermi="['school:course-fee:update']"
           >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['school:course-fee:delete']"
-          >
-            删除
+            明细
           </el-button>
         </template>
       </el-table-column>
@@ -83,14 +75,16 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <CourseFeeForm ref="formRef" @success="getList" />
+  <CalculateForm ref="formRef" @success="getList" />
+  <CourseFeeDetail ref="courseFeeDetailRef"/>
 </template>
 
 <script setup lang="ts">
 import download from '@/utils/download'
 import { CourseFeeApi, CourseFeeVO } from '@/api/school/courseFee'
-import CourseFeeForm from './CourseFeeForm.vue'
-import {formatToDate} from "@/utils/dateUtil";
+import CalculateForm from './calculateForm.vue'
+import CourseFeeDetail from './detail.vue'
+import {formatToDate, formatToDateTime} from "@/utils/dateUtil";
 import * as TeacherApi from "@/api/school/teacher";
 
 /** 课时费明细 列表 */
@@ -142,17 +136,10 @@ const openForm = (type: string, id?: number) => {
   formRef.value.open(type, id)
 }
 
-/** 删除按钮操作 */
-const handleDelete = async (id: number) => {
-  try {
-    // 删除的二次确认
-    await message.delConfirm()
-    // 发起删除
-    await CourseFeeApi.deleteCourseFee(id)
-    message.success(t('common.delSuccess'))
-    // 刷新列表
-    await getList()
-  } catch {}
+/** 课时费详情 */
+const courseFeeDetailRef = ref()
+const openDetailDialog = (teacherId: number, date: string) => {
+  courseFeeDetailRef.value.open(teacherId, date)
 }
 
 /** 导出按钮操作 */

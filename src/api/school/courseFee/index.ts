@@ -12,11 +12,29 @@ export interface CourseFeeVO {
   date: Date // 日期
 }
 
+export interface CourseFeeCalculateVO {
+  teacherId: number
+  date: Date
+}
+
+export interface CourseFeeDetailListVO {
+  date: string
+  count: number
+}
+
 // 课时费明细 API
 export const CourseFeeApi = {
   // 查询课时费明细分页
   getCourseFeePage: async (params: any) => {
     return await request.get({ url: `/school/course-fee/page`, params })
+  },
+
+  calculate: async (data: CourseFeeCalculateVO) => {
+    return await request.post({ url: `/school/course-fee/calculate`, data })
+  },
+
+  getDetailList: async (params: any) => {
+    return await request.get({ url: `/school/course-fee/detail`, params })
   },
 
   // 查询课时费明细详情
