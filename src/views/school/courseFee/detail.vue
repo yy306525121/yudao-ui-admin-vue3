@@ -13,9 +13,26 @@
 
           <el-tooltip class="box-item" effect="dark" placement="top-start">
             <template #content>
-              {{ data.day }}
-              <br/>
-              345
+<!--              {{ data.day }}-->
+<!--              <br/>-->
+<!--              345-->
+              <el-table :data="getCourseFeeList(data.day)" :show-header="false">
+                <el-table-column prop="timeSlot.sort" label="节次" width="80">
+                  <template #default="{ row }">
+                    <span>第{{ row.timeSlot.sort }}节</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="count" label="课时" width="80">
+                  <template #default="{ row }">
+                    {{row.count}}课时
+                  </template>
+                </el-table-column>
+                <el-table-column prop="count" label="备注" width="80">
+                  <template #default="{ row }">
+                    {{row.remark ? row.remark : '---'}}
+                  </template>
+                </el-table-column>
+              </el-table>
             </template>
             <span>
               <el-tag class="ml-2" type="success"
@@ -60,8 +77,21 @@ const open = async (teacherId: number, date: string) => {
 }
 defineExpose({open}) // 提供 open 方法，用于打开弹窗
 
+const getCourseFee = ( date: string) => {
+  return list.value.find(item => item.date == date)
+}
+
+const getCourseFeeList = (date: string) => {
+  const dateItem = getCourseFee(date)
+  if (dateItem) {
+    return dateItem.courseFeeList
+  } else {
+    return []
+  }
+}
+
 const getCourseFeeCount = (date: string) => {
-  const dateItem = list.value.find(item => item.date == date)
+  const dateItem = getCourseFee(date)
   if (dateItem) {
     return dateItem.count
   } else {

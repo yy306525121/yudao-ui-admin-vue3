@@ -1,4 +1,9 @@
 import request from '@/config/axios'
+import {TeacherVO} from "@/api/school/teacher";
+import {GradeVO} from "@/api/school/grade";
+import {SubjectVO} from "@/api/school/subject";
+import {TimeSlotVO} from "@/api/school/timeSlot";
+import {CourseTypeVO} from "@/api/school/coursetype";
 
 // 课时费明细 VO
 export interface CourseFeeVO {
@@ -17,9 +22,23 @@ export interface CourseFeeCalculateVO {
   date: Date
 }
 
+// 课时明细列表
+export interface CourseFeeDetailRespVO {
+  teacher: TeacherVO
+  grade: GradeVO
+  subject: SubjectVO
+  timeSlot: TimeSlotVO
+  courseType: CourseTypeVO
+  week: number
+  date: Date
+  count: GLfloat
+}
+
+
 export interface CourseFeeDetailListVO {
   date: string
   count: number
+  courseFeeList: CourseFeeDetailRespVO[]
 }
 
 // 课时费明细 API
