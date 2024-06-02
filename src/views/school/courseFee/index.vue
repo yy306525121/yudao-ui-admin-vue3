@@ -84,14 +84,13 @@ import download from '@/utils/download'
 import { CourseFeeApi, CourseFeeVO } from '@/api/school/courseFee'
 import CalculateForm from './calculateForm.vue'
 import CourseFeeDetail from './detail.vue'
-import {formatToDate, formatToDateTime} from "@/utils/dateUtil";
+import {formatToDate} from "@/utils/dateUtil";
 import * as TeacherApi from "@/api/school/teacher";
 
 /** 课时费明细 列表 */
 defineOptions({ name: 'CourseFee' })
 
 const message = useMessage() // 消息弹窗
-const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
 const list = ref<CourseFeeVO[]>([]) // 列表的数据

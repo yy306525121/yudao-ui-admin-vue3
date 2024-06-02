@@ -13,9 +13,6 @@
 
           <el-tooltip class="box-item" effect="dark" placement="top-start">
             <template #content>
-<!--              {{ data.day }}-->
-<!--              <br/>-->
-<!--              345-->
               <el-table :data="getCourseFeeList(data.day)" :show-header="false">
                 <el-table-column prop="timeSlot.sort" label="节次" width="80">
                   <template #default="{ row }">

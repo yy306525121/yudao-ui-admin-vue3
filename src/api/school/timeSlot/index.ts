@@ -21,6 +21,10 @@ export const TimeSlotApi = {
     return await request.get({ url: `/school/time-slot/list`, params })
   },
 
+  getSimpleTeacherList: async (): Promise<TimeSlotVO[]> => {
+    return await request.get({ url: `/school/time-slot/simple-list` })
+  },
+
   // 查询课程节次详情
   getTimeSlot: async (id: number) => {
     return await request.get({ url: `/school/time-slot/get?id=` + id })
