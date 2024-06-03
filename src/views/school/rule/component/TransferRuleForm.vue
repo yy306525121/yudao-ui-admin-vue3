@@ -142,7 +142,7 @@ const formData = ref({
   fromSubjectId: undefined,
   toSubjectId: undefined,
   fromCourseTypeId: undefined,
-  toCourseTypeId: undefined,
+  toCourseTypeId: undefined
 })
 const formRules = reactive({
   date: [{ required: true, message: '日期不能为空', trigger: 'blur' }],
@@ -216,12 +216,15 @@ const submitForm = async () => {
 const resetForm = () => {
   formData.value = {
     id: undefined,
-    name: '',
-    status: CommonStatusEnum.ENABLE,
-    sort: 0,
-    subjectIds: [],
-    basicSalary: 0,
-    courseSalary: 0
+    date: undefined,
+    gradeId: undefined,
+    timeSlotId: undefined,
+    fromTeacherId: undefined,
+    toTeacherId: undefined,
+    fromSubjectId: undefined,
+    toSubjectId: undefined,
+    fromCourseTypeId: undefined,
+    toCourseTypeId: undefined
   } as any
   formRef.value?.resetFields()
 }

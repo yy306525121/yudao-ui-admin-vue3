@@ -11,7 +11,7 @@ export interface GradeVO {
 // 班级 API
 export const GradeApi = {
   // 查询班级列表
-  getGradeList: async (params) => {
+  getGradeList: async (params: any) => {
     return await request.get({ url: `/school/grade/list`, params })
   },
 
@@ -20,8 +20,8 @@ export const GradeApi = {
     return await request.get({ url: `/school/grade/tree` })
   },
 
-  getSimpleGradeList: async (): Promise<GradeVO[]> => {
-    return await request.get({ url: `/school/grade/simple-list` })
+  getSimpleGradeList: async (params?: any): Promise<GradeVO[]> => {
+    return await request.get({ url: `/school/grade/simple-list`, params })
   },
 
   // 查询班级详情
@@ -45,7 +45,7 @@ export const GradeApi = {
   },
 
   // 导出班级 Excel
-  exportGrade: async (params) => {
+  exportGrade: async (params: any) => {
     return await request.download({ url: `/school/grade/export-excel`, params })
   }
 }
