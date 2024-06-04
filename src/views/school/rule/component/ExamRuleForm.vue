@@ -98,9 +98,9 @@ import { SubjectApi, SubjectVO } from '@/api/school/subject'
 import {GradeApi, GradeVO} from "@/api/school/grade";
 import {TimeSlotApi, TimeSlotVO} from "@/api/school/timeSlot";
 import {CourseTypeApi, CourseTypeVO} from "@/api/school/coursetype";
-import {HolidayRuleApi, HolidayRuleVO} from "@/api/school/rule/holidayRule";
+import {ExamRuleApi, ExamRuleVO} from "@/api/school/rule/examRule";
 
-defineOptions({ name: 'HolidayRuleForm' })
+defineOptions({ name: 'ExamRuleForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -130,20 +130,17 @@ const timeSlotList = ref([] as TimeSlotVO[]) // 节次列表
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
-  dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
-
-  debugger
-
   gradeList.value = await GradeApi.getSimpleGradeList({'parentId': 0})
   timeSlotList.value = await TimeSlotApi.getSimpleTeacherList()
   resetForm()
+  dialogVisible.value = true
+  formLoading.value = true
   // 修改时，设置数据
   if (id) {
-    formLoading.value = true
     try {
-      formData.value = await HolidayRuleApi.getHolidayRule(id)
+      formData.value = await ExamRuleApi.getExamRule(id)
     } finally {
       formLoading.value = false
     }
@@ -163,12 +160,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as HolidayRuleVO
+    const data = formData.value as unknown as ExamRuleVO
     if (formType.value === 'create') {
-      await HolidayRuleApi.createHolidayRule(data)
+      await ExamRuleApi.createExamRule(data)
       message.success(t('common.createSuccess'))
     } else {
-      await HolidayRuleApi.updateHolidayRule(data)
+      await ExamRuleApi.updateExamRule(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
