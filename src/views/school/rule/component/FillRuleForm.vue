@@ -17,74 +17,64 @@
           />
         </el-select>
       </el-form-item>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="开始日期" prop="startDate">
-            <el-date-picker
-              v-model="formData.startDate"
-              value-format="YYYY-MM-DD"
-              type="date"
-              placeholder="选择日期"
-              class="!w-660px"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="开始节次" prop="startTimeSlotId">
-            <el-select v-model="formData.startTimeSlotId" placeholder="请选择">
-              <el-option v-for="item in timeSlotList" :key="item.id" :label="'第'+item.sort+'节'" :value="item.id">
-                <span style="float: left">第{{ item.sort }}节</span>
-                <span
-                  style="
+      <el-form-item label="日期" prop="date">
+        <el-date-picker
+          v-model="formData.date"
+          value-format="YYYY-MM-DD"
+          type="date"
+          placeholder="选择日期"
+          class="!w-660px"
+        />
+      </el-form-item>
+      <el-form-item label="补周几课" prop="week">
+        <el-select v-model="formData.week" clearable placeholder="请选择" class="menu_option">
+          <el-option label="周一" :value="1" :key="1"/>
+          <el-option label="周二" :value="2" :key="2"/>
+          <el-option label="周三" :value="3" :key="3"/>
+          <el-option label="周四" :value="4" :key="4"/>
+          <el-option label="周五" :value="5" :key="5"/>
+          <el-option label="周六" :value="6" :key="6"/>
+          <el-option label="周日" :value="7" :key="7"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="开始节次" prop="startTimeSlotId">
+        <el-select v-model="formData.startTimeSlotId" placeholder="请选择">
+          <el-option v-for="item in timeSlotList" :key="item.id" :label="'第'+item.sort+'节'" :value="item.id">
+            <span style="float: left">第{{ item.sort }}节</span>
+            <span
+              style="
                     float: right;
                     color: var(--el-text-color-secondary);
                     font-size: 13px;
                     "
-                >
+            >
               <span v-if="item.sort === 1">早自习</span>
               <span v-if="item.sort >= 2 && item.sort <= 6">上午</span>
               <span v-if="item.sort >= 7 && item.sort <= 10">下午</span>
               <span v-if="item.sort >= 11">夜自习</span>
             </span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="结束日期" prop="endDate">
-            <el-date-picker
-              v-model="formData.endDate"
-              value-format="YYYY-MM-DD"
-              type="date"
-              placeholder="选择日期"
-              class="!w-660px"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="结束节次" prop="endTimeSlotId">
-            <el-select v-model="formData.endTimeSlotId" placeholder="请选择">
-              <el-option v-for="item in timeSlotList" :key="item.id" :label="'第'+item.sort+'节'" :value="item.id">
-                <span style="float: left">第{{ item.sort }}节</span>
-                <span
-                  style="
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="结束节次" prop="endTimeSlotId">
+        <el-select v-model="formData.endTimeSlotId" placeholder="请选择">
+          <el-option v-for="item in timeSlotList" :key="item.id" :label="'第'+item.sort+'节'" :value="item.id">
+            <span style="float: left">第{{ item.sort }}节</span>
+            <span
+              style="
                     float: right;
                     color: var(--el-text-color-secondary);
                     font-size: 13px;
                     "
-                >
+            >
               <span v-if="item.sort === 1">早自习</span>
               <span v-if="item.sort >= 2 && item.sort <= 6">上午</span>
               <span v-if="item.sort >= 7 && item.sort <= 10">下午</span>
               <span v-if="item.sort >= 11">夜自习</span>
             </span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
+          </el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
@@ -93,12 +83,9 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import * as TeacherApi from '@/api/school/teacher'
-import { SubjectApi, SubjectVO } from '@/api/school/subject'
 import {GradeApi, GradeVO} from "@/api/school/grade";
 import {TimeSlotApi, TimeSlotVO} from "@/api/school/timeSlot";
-import {CourseTypeApi, CourseTypeVO} from "@/api/school/coursetype";
-import {HolidayRuleApi, HolidayRuleVO} from "@/api/school/rule/holidayRule";
+import {FillRuleApi, FillRuleVO} from "@/api/school/rule/fillRule";
 
 defineOptions({ name: 'HolidayRuleForm' })
 
@@ -112,24 +99,21 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   gradeIds: [],
-  startDate: undefined,
+  date: undefined,
+  week: undefined,
   startTimeSlotId: undefined,
-  endDate: undefined,
   endTimeSlotId: undefined
 })
 const formRules = reactive({
   gradeIds: [{ required: true, message: '班级不能为空', trigger: 'change' }],
-  startDate: [{ required: true, message: '开始日期不能为空', trigger: 'blur' }],
+  date: [{ required: true, message: '日期不能为空', trigger: 'blur' }],
+  week: [{ required: true, message: '补周几课不能为空', trigger: 'blur' }],
   startTimeSlotId: [{ required: true, message: '开始节次不能为空', trigger: 'change' }],
-  endDate: [{ required: true, message: '结束日期不能为空', trigger: 'blur' }],
   endTimeSlotId: [{ required: true, message: '结束节次不能为空', trigger: 'change' }],
 })
 const formRef = ref() // 表单 Ref
-const subjectList = ref([] as SubjectVO[]) // 科目列表
 const gradeList = ref<GradeVO[]>([])// 年级列表
 const timeSlotList = ref([] as TimeSlotVO[]) // 节次列表
-const teacherList = ref<TeacherApi.TeacherVO[]>([]) //教师列表
-const courseTypeList = ref<CourseTypeVO[]>([])
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -137,20 +121,14 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
 
-  debugger
-
   gradeList.value = await GradeApi.getSimpleGradeList({'parentId': 0})
   timeSlotList.value = await TimeSlotApi.getSimpleTeacherList()
-  teacherList.value = await TeacherApi.getSimpleTeacherList()
-  // 加载科目列表
-  subjectList.value = await SubjectApi.getSimpleSubjectList()
-  courseTypeList.value = await CourseTypeApi.getSimpleCourseTypeList()
   resetForm()
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await HolidayRuleApi.getHolidayRule(id)
+      formData.value = await FillRuleApi.getFillRule(id)
     } finally {
       formLoading.value = false
     }
@@ -170,12 +148,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as HolidayRuleVO
+    const data = formData.value as unknown as FillRuleVO
     if (formType.value === 'create') {
-      await HolidayRuleApi.createHolidayRule(data)
+      await FillRuleApi.createFillRule(data)
       message.success(t('common.createSuccess'))
     } else {
-      await HolidayRuleApi.updateHolidayRule(data)
+      await FillRuleApi.updateFillRule(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -191,9 +169,9 @@ const resetForm = () => {
   formData.value = {
     id: undefined,
     gradeIds: [],
-    startDate: undefined,
+    date: undefined,
+    week: undefined,
     startTimeSlotId: undefined,
-    endDate: undefined,
     endTimeSlotId: undefined
   } as any
   formRef.value?.resetFields()

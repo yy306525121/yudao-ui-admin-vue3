@@ -39,6 +39,9 @@
       <el-tab-pane label="放假规则" name="holiday">
         <HolidayRuleList ref="holidayRuleListRef" :search-date="queryParams.date" @handle-update="handleUpdate"/>
       </el-tab-pane>
+      <el-tab-pane label="补课规则" name="fill">
+        <FillRuleList ref="fillRuleListRef" :search-date="queryParams.date" @handle-update="handleUpdate"/>
+      </el-tab-pane>
       <el-tab-pane label="临时调课规则" name="transfer">
         <TransferRuleList ref="transferRuleListRef" :search-date="queryParams.date" @handle-update="handleUpdate"/>
       </el-tab-pane>
@@ -47,6 +50,7 @@
 
   <TransferRuleForm ref="transferRuleFormRef" @success="handleQuery"/>
   <HolidayRuleForm ref="holidayRuleFormRef" @success="handleQuery"/>
+  <FillRuleForm ref="fillRuleFormRef" @success="handleQuery"/>
 </template>
 
 <script setup lang="ts">/** 课时费计算规则 列表 */
@@ -55,6 +59,8 @@ import TransferRuleList from './component/TransferRuleList.vue'
 import HolidayRuleList from './component/HolidayRuleList.vue'
 import TransferRuleForm from './component/TransferRuleForm.vue'
 import HolidayRuleForm from './component/HolidayRuleForm.vue'
+import FillRuleList from './component/FillRuleList.vue'
+import FillRuleForm from './component/FillRuleForm.vue'
 
 
 defineOptions({ name: 'Rule' })
@@ -69,6 +75,8 @@ const transferRuleListRef = ref() // 临时调课规则列表
 const holidayRuleListRef = ref() // 放假规则列表
 const holidayRuleFormRef = ref() // 放假规则表单
 const transferRuleFormRef = ref() // 临时调课规则表单
+const fillRuleListRef = ref() // 补课规则表单
+const fillRuleFormRef = ref() // 补课规则表单
 
 
 
@@ -80,6 +88,8 @@ const handleQuery = () => {
         holidayRuleListRef.value.getList()
       } else if (tabType.value === 'transfer') {
         transferRuleListRef.value.getList()
+      } else if (tabType.value === 'fill') {
+        fillRuleListRef.value.getList()
       }
     }
   })
@@ -96,6 +106,8 @@ const handleUpdate = (id: number) => {
     holidayRuleFormRef.value.open('update', id)
   } else if (tabType.value === 'transfer') {
     transferRuleFormRef.value.open('update', id)
+  } else if (tabType.value === 'fill') {
+    fillRuleFormRef.value.open('update', id)
   }
 }
 
@@ -104,6 +116,8 @@ const handleTabChange = (tab: string) => {
     holidayRuleListRef.value.getList()
   } else if (tab === 'transfer') {
     transferRuleListRef.value.getList()
+  } else if (tab === 'fill') {
+    fillRuleListRef.value.getList()
   }
 }
 
@@ -113,6 +127,8 @@ const openForm = (type: string, id?: number) => {
     holidayRuleFormRef.value.open(type, id)
   } else if (tabType.value === 'transfer') {
     transferRuleFormRef.value.open(type, id)
+  } else if (tabType.value === 'fill') {
+    fillRuleFormRef.value.open(type, id)
   }
 }
 </script>
