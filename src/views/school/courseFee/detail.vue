@@ -24,7 +24,12 @@
                     {{row.count}}课时
                   </template>
                 </el-table-column>
-                <el-table-column prop="count" label="备注" width="80">
+                <el-table-column prop="grade" label="备注" width="80">
+                  <template #default="{ row }">
+                    {{row.grade ? row.grade.name : '---'}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="remark" label="备注" width="80">
                   <template #default="{ row }">
                     {{row.remark ? row.remark : '---'}}
                   </template>
