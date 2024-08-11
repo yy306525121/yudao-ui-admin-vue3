@@ -32,7 +32,7 @@
           @click="openForm('create')"
           v-hasPermi="['school:course-fee:calculate']"
         >
-          <Icon icon="ep:plus" class="mr-5px" /> 计算
+          <Icon icon="ep:histogram" class="mr-5px" /> 计算
         </el-button>
         <el-button
           type="success"

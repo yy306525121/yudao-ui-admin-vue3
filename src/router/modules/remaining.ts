@@ -573,7 +573,43 @@ const remainingRouter: AppRouteRecordRaw[] = [
         component: () => import('@/views/crm/product/detail/index.vue')
       }
     ]
-  }
+  },
+  {
+    path: '/school',
+    component: Layout,
+    name: 'school',
+    meta: {
+      hidden: true
+    },
+    children: [
+      {
+        path: 'timetable/setting/:timetableId',
+        component: () => import('@/views/school/timetable/setting/index.vue'),
+        name: 'SchoolTimeTableSetting',
+        meta: {
+          title: '排课计划设置',
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          icon: '',
+          activeMenu: '/school/timetable'
+        }
+      },
+      {
+        path: 'timetable/result/:timetableId',
+        component: () => import('@/views/school/timetable/result/index.vue'),
+        name: 'SchoolTimetableResult',
+        meta: {
+          title: '排课结果',
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          icon: '',
+          activeMenu: '/school/timetable'
+        }
+      }
+    ]
+  },
 ]
 
 export default remainingRouter

@@ -12,7 +12,7 @@
         第{{scope.row.startTimeSlot.sort}}节
       </template>
     </el-table-column>
-    <el-table-column label="开始节次" align="center" prop="endTimeSlot">
+    <el-table-column label="结束节次" align="center" prop="endTimeSlot">
       <template #default="scope">
         第{{scope.row.endTimeSlot.sort}}节
       </template>

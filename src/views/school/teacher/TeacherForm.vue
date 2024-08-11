@@ -24,7 +24,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="授课科目" prop="subjectIds">
-        <el-select v-model="formData.subjectIds" multiple placeholder="请选择">
+        <el-select v-model="formData.subjectIds" multiple placeholder="请选择" filterable>
           <el-option
             v-for="item in subjectList"
             :key="item.id"

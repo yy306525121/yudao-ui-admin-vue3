@@ -136,10 +136,10 @@ const open = async (type: string, id?: number) => {
   timeSlotList.value = await TimeSlotApi.getSimpleTeacherList()
   resetForm()
   dialogVisible.value = true
-  formLoading.value = true
   // 修改时，设置数据
   if (id) {
     try {
+      formLoading.value = true
       formData.value = await ExamRuleApi.getExamRule(id)
     } finally {
       formLoading.value = false

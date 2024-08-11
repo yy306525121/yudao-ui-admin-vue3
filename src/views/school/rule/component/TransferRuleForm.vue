@@ -163,8 +163,6 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
 
-  debugger
-
   gradeList.value = handleTree(await GradeApi.getSimpleGradeList())
   timeSlotList.value = await TimeSlotApi.getSimpleTeacherList()
   teacherList.value = await TeacherApi.getSimpleTeacherList()

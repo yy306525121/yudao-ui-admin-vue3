@@ -93,11 +93,8 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import * as TeacherApi from '@/api/school/teacher'
-import { SubjectApi, SubjectVO } from '@/api/school/subject'
 import {GradeApi, GradeVO} from "@/api/school/grade";
 import {TimeSlotApi, TimeSlotVO} from "@/api/school/timeSlot";
-import {CourseTypeApi, CourseTypeVO} from "@/api/school/coursetype";
 import {HolidayRuleApi, HolidayRuleVO} from "@/api/school/rule/holidayRule";
 
 defineOptions({ name: 'HolidayRuleForm' })

@@ -138,10 +138,10 @@ const formRules = reactive({
   gradeId: [{ required: true, message: '班级不能为空', trigger: 'blur' }],
   fromTeacherId: [{ required: true, message: '教师不能为空', trigger: 'blur' }],
   toTeacherId: [{ required: true, message: '教师不能为空', trigger: 'blur' }],
-  fromSubjectId: [{ required: true, message: '科目不能为空', trigger: 'blur' }],
-  toSubjectId: [{ required: true, message: '科目不能为空', trigger: 'blur' }],
-  fromCourseTypeId: [{ required: true, message: '类型不能为空', trigger: 'blur' }],
-  toCourseTypeId: [{ required: true, message: '类型不能为空', trigger: 'blur' }]
+  // fromSubjectId: [{ required: true, message: '科目不能为空', trigger: 'blur' }],
+  // toSubjectId: [{ required: true, message: '科目不能为空', trigger: 'blur' }],
+  // fromCourseTypeId: [{ required: true, message: '类型不能为空', trigger: 'blur' }],
+  // toCourseTypeId: [{ required: true, message: '类型不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 
