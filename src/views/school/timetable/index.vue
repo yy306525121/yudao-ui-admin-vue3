@@ -28,15 +28,6 @@
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['solver:timetable:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -76,15 +67,16 @@
 
           <el-button
             link
-            type="danger"
+            type="primary"
             @click="handleSolve(scope.row.id)"
             v-hasPermi="['school:timetable:solve']"
+            :loading="scope.row.running"
           >
             开始排课
           </el-button>
 
           <router-link :to="'/school/timetable/result/' + scope.row.id">
-            <el-button link type="primary">查看排课结果</el-button>
+            <el-button link type="primary">查看结果</el-button>
           </router-link>
 
           <el-button
@@ -113,10 +105,10 @@
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
-import download from '@/utils/download'
 import { TimetableApi, TimetableVO } from '@/api/school/timetable'
 import TimetableForm from './TimetableForm.vue'
 import {DICT_TYPE} from "@/utils/dict";
+import {TimeFoldJobStatus, TimetableStatus} from "@/utils/constants";
 
 /** 排课 列表 */
 defineOptions({ name: 'Timetable' })
@@ -134,7 +126,6 @@ const queryParams = reactive({
   name: undefined
 })
 const queryFormRef = ref() // 搜索的表单
-const exportLoading = ref(false) // 导出的加载中
 
 /** 查询列表 */
 const getList = async () => {
@@ -169,10 +160,14 @@ const openForm = (type: string, id?: number) => {
 /** 开始排课操作 */
 const handleSolve = async (id: number) => {
   try {
-    // 删除的二次确认
-    await message.confirm('确认开始排课吗')
+    // 二次确认
+    await message.confirm('确认开始排课吗？')
     // 发起删除
     await TimetableApi.solve(id)
+    let result = list.value.find(item => item.id == id)
+    if (result) {
+      result.running = true
+    }
     message.success(t('common.success'))
     // 刷新列表
     await getList()
@@ -192,23 +187,25 @@ const handleDelete = async (id: number) => {
   } catch {}
 }
 
-/** 导出按钮操作 */
-const handleExport = async () => {
-  try {
-    // 导出的二次确认
-    await message.exportConfirm()
-    // 发起导出
-    exportLoading.value = true
-    const data = await TimetableApi.exportTimetable(queryParams)
-    download.excel(data, '排课.xls')
-  } catch {
-  } finally {
-    exportLoading.value = false
-  }
+/** 刷新运行状态 */
+const flushStatus = async() => {
+  list.value.forEach(item => {
+    console.log(list.value)
+    if(item.running) {
+      TimetableApi.getStatus(item.id).then(res => {
+        if (res === TimeFoldJobStatus.NOT_SOLVING.value) {
+          item.running = false
+          item.status = TimetableStatus.YES.value
+        }
+      })
+    }
+  })
 }
 
 /** 初始化 **/
 onMounted(() => {
   getList()
+
+  setInterval(flushStatus, 1000)
 })
 </script>

@@ -4,12 +4,18 @@ import request from '@/config/axios'
 export interface TimetableVO {
   id: number // 编号
   name: string // 排课名称
+  status: number
+  running: boolean
 }
 
 // 排课 API
 export const TimetableApi = {
   solve: async (id: number) => {
-    return await request.get( { url: `/school/timetable/solve?id=` + id} )
+    return await request.get( { url: `/school/timetable/solve/` + id} )
+  },
+
+  getStatus: async (id: number) => {
+    return await request.get( {url: `/school/timetable/status/` + id} )
   },
 
   // 查询排课分页

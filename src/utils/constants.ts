@@ -507,3 +507,25 @@ export const WeekEnum = {
     name: '周日'
   }
 }
+
+export const TimeFoldJobStatus = {
+  NOT_SOLVING: {
+    value: 'NOT_SOLVING',
+    name: '未运行'
+  },
+  SOLVING_ACTIVE: {
+    value: 'SOLVING_ACTIVE',
+    name: '正在运行'
+  }
+}
+
+export const TimetableStatus = {
+  NO: {
+    value: 0,
+    name: '未排课'
+  },
+  YES: {
+    value: 1,
+    name: '已排课'
+  }
+}
