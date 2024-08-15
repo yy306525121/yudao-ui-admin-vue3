@@ -69,7 +69,8 @@
           {{scope.row.courseType.name}}
         </template>
       </el-table-column>
-      <el-table-column label="每周课程数" align="center" prop="countEveryWeek" />
+      <el-table-column label="普通课时" align="center" prop="ordinaryCount" />
+      <el-table-column label="连堂课" align="center" prop="continuousCount" />
       <el-table-column
         label="创建时间"
         align="center"

@@ -33,8 +33,11 @@
           <el-option v-for="item in courseTypeList" :key="item.id" :label="item.name" :value="item.id ?? ''"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="每周课程数" prop="countEveryWeek">
-        <el-input-number v-model="formData.countEveryWeek" :min="1" placeholder="请输入"/>
+      <el-form-item label="普通课时" prop="ordinaryCount">
+        <el-input-number v-model="formData.ordinaryCount" :min="1" placeholder="请输入"/>
+      </el-form-item>
+      <el-form-item label="连堂课" prop="continuousCount">
+        <el-input-number v-model="formData.continuousCount" :min="1" placeholder="请输入"/>
       </el-form-item>
       <el-form-item label="偏好星期" prop="likeWeeks">
         <el-select v-model="formData.preferWeeks" clearable placeholder="请选择" class="menu_option" multiple>
@@ -99,7 +102,8 @@ const formData = ref({
   subjectId: undefined,
   teacherId: undefined,
   courseTypeId: undefined,
-  countEveryWeek: undefined,
+  ordinaryCount: undefined,
+  continuousCount: undefined,
   preferWeeks: [],
   preferTimeSlotIds: []
 })
@@ -108,7 +112,7 @@ const formRules = reactive({
   subjectId: [{ required: true, message: '科目不能为空', trigger: 'blur' }],
   teacherId: [{ required: true, message: '教师不能为空', trigger: 'blur' }],
   courseTypeId: [{ required: true, message: '课程类型不能为空', trigger: 'blur' }],
-  countEveryWeek: [{ required: true, message: '每周课程数不能为空', trigger: 'blur' }]
+  ordinaryCount: [{ required: true, message: '普通课时不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const gradeList = ref<Tree[]>([])// 年级列表
@@ -179,7 +183,8 @@ const resetForm = () => {
     subjectId: undefined,
     teacherId: undefined,
     courseTypeId: undefined,
-    countEveryWeek: undefined,
+    ordinaryCount: undefined,
+    continuousCount: undefined,
     preferWeeks: [],
     preferTimeSlotIds: []
   }
