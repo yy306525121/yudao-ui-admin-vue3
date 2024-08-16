@@ -588,7 +588,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
         name: 'SchoolTimeTableSetting',
         meta: {
           title: '排课计划设置',
-          noCache: true,
+          noCache: false,
           hidden: true,
           canTo: true,
           icon: '',
@@ -601,7 +601,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
         name: 'SchoolTimetableResult',
         meta: {
           title: '排课结果',
-          noCache: true,
+          noCache: false,
           hidden: true,
           canTo: true,
           icon: '',

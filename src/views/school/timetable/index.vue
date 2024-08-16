@@ -170,7 +170,7 @@ const handleSolve = async (id: number) => {
     }
     message.success(t('common.success'))
     // 刷新列表
-    await getList()
+    // await getList()
   } catch {}
 }
 
