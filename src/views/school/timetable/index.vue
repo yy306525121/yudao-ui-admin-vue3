@@ -164,10 +164,10 @@ const handleSolve = async (id: number) => {
     await message.confirm('确认开始排课吗？')
     // 发起删除
     await TimetableApi.solve(id)
-    let result = list.value.find(item => item.id == id)
-    if (result) {
-      result.running = true
-    }
+    // let result = list.value.find(item => item.id == id)
+    // if (result) {
+    //   result.running = true
+    // }
     message.success(t('common.success'))
     // 刷新列表
     // await getList()
@@ -206,6 +206,6 @@ const flushStatus = async() => {
 onMounted(() => {
   getList()
 
-  setInterval(flushStatus, 1000)
+  // setInterval(flushStatus, 1000)
 })
 </script>

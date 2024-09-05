@@ -149,7 +149,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await CourseFeeApi.exportCourseFee(queryParams)
-    download.excel(data, '课时费明细.xls')
+    download.excel(data, '课时费明细.xlsx')
   } catch {
   } finally {
     exportLoading.value = false
