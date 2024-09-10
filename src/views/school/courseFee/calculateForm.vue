@@ -30,7 +30,7 @@
 </template>
 <script setup lang="ts">
 import {CourseFeeApi, CourseFeeCalculateVO} from '@/api/school/courseFee'
-import {formatToDate} from "@/utils/dateUtil";
+import {formatToDate, plusMonth} from "@/utils/dateUtil";
 import * as TeacherApi from "@/api/school/teacher";
 
 /** 课时费计算 表单 */
@@ -46,7 +46,7 @@ const dialogTitle = ref('课时费计算') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formData = ref({
   teacherId: undefined,
-  date: formatToDate(new Date())
+  date: plusMonth(new Date(), -1)
 })
 const formRules = reactive({
   date: [{ required: true, message: '月份不能为空', trigger: 'blur' }]
@@ -92,7 +92,7 @@ const submitForm = async () => {
 const resetForm = () => {
   formData.value = {
     teacherId: undefined,
-    date: formatToDate(new Date())
+    date: plusMonth(new Date(), -1)
   }
   formRef.value?.resetFields()
 }

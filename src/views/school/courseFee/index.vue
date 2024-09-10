@@ -84,7 +84,7 @@ import download from '@/utils/download'
 import { CourseFeeApi, CourseFeeVO } from '@/api/school/courseFee'
 import CalculateForm from './calculateForm.vue'
 import CourseFeeDetail from './detail.vue'
-import {formatToDate} from "@/utils/dateUtil";
+import {parseDate, plusMonth} from "@/utils/dateUtil";
 import * as TeacherApi from "@/api/school/teacher";
 
 /** 课时费明细 列表 */
@@ -99,7 +99,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  date: formatToDate(new Date()),
+  date: plusMonth(new Date(), -1),
   teacherId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
@@ -149,7 +149,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await CourseFeeApi.exportCourseFee(queryParams)
-    download.excel(data, '课时费明细.xlsx')
+    download.excel(data, parseDate(queryParams.date).getMonth() + 1  + '课时费明细.xlsx')
   } catch {
   } finally {
     exportLoading.value = false
