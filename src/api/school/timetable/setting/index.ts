@@ -6,10 +6,7 @@ export interface TimetableSettingVO {
   gradeId: number // 班级
   subjectId: number // 科目
   teacherId: number // 教师
-  ordinaryCount: number // 普通课时
-  continuousCount: number // 连堂课次数
-  preferWeeks: Array<number> //偏好星期
-  preferTimeSlotIds: Array<number> //偏好节次
+  count: number // 课时
 }
 
 // 排课计划设置 API

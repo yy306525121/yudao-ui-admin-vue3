@@ -37,9 +37,17 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['school:timetable:create']"
+          v-hasPermi="['school:timetable-setting:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
+        </el-button>
+        <el-button
+          type="warning"
+          plain
+          @click="handleImport"
+          v-hasPermi="['school:timetable-setting:import']"
+        >
+          <Icon icon="ep:upload" /> 导入
         </el-button>
       </el-form-item>
     </el-form>
@@ -69,8 +77,7 @@
           {{scope.row.courseType.name}}
         </template>
       </el-table-column>
-      <el-table-column label="普通课时" align="center" prop="ordinaryCount" />
-      <el-table-column label="连堂课" align="center" prop="continuousCount" />
+      <el-table-column label="课时" align="center" prop="count" />
       <el-table-column
         label="创建时间"
         align="center"
@@ -110,6 +117,7 @@
 
   <!-- 表单弹窗：添加/修改 -->
   <TimetableSettingForm ref="formRef" @success="getList" />
+  <TimetableSettingImportForm ref="importFormRef" @success="getList"/>
 </template>
 
 <script setup lang="ts">
@@ -117,6 +125,7 @@ import { dateFormatter } from '@/utils/formatTime'
 import { TimetableSettingApi, TimetableSettingVO } from '@/api/school/timetable/setting'
 import { TimetableApi, TimetableVO } from '@/api/school/timetable'
 import TimetableSettingForm from './TimetableSettingForm.vue'
+import TimetableSettingImportForm from './TimetableSettingImportForm.vue'
 import {defaultProps, handleTree} from "@/utils/tree";
 import {GradeApi} from "@/api/school/grade";
 
@@ -130,6 +139,7 @@ const route = useRoute() // 路由
 const loading = ref(true) // 列表的加载中
 const list = ref<TimetableSettingVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
+
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -183,6 +193,11 @@ const handleDelete = async (id: number) => {
     // 刷新列表
     await getList()
   } catch {}
+}
+
+const importFormRef = ref()
+const handleImport = () => {
+  importFormRef.value.open(queryParams.timetableId)
 }
 
 /** 初始化 **/
