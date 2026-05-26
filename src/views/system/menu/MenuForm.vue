@@ -46,6 +46,23 @@
       <el-form-item v-if="formData.type === 2" label="组件地址" prop="component">
         <el-input v-model="formData.component" clearable placeholder="例如说：system/user/index" />
       </el-form-item>
+      <el-form-item v-if="formData.type === 2" label="后台模型">
+        <el-select
+          v-model="backendModelId"
+          class="!w-360px"
+          clearable
+          filterable
+          placeholder="请选择后台模型"
+          @change="handleBackendModelChange"
+        >
+          <el-option
+            v-for="item in backendModelList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id!"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item v-if="formData.type === 2" label="组件名字" prop="componentName">
         <el-input v-model="formData.componentName" clearable placeholder="例如说：SystemUser" />
       </el-form-item>
@@ -115,6 +132,7 @@
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as MenuApi from '@/api/system/menu'
+import * as BackendModelApi from '@/api/infra/backendModel'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { CommonStatusEnum, SystemMenuTypeEnum } from '@/utils/constants'
 import { defaultProps, handleTree } from '@/utils/tree'
@@ -153,6 +171,8 @@ const formRules = reactive({
   status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
+const backendModelId = ref<string>()
+const backendModelList = ref<BackendModelApi.BackendModelVO[]>([])
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number, parentId?: number) => {
@@ -168,12 +188,14 @@ const open = async (type: string, id?: number, parentId?: number) => {
     formLoading.value = true
     try {
       formData.value = await MenuApi.getMenu(id)
+      backendModelId.value = parseBackendModelId(formData.value.component)
     } finally {
       formLoading.value = false
     }
   }
   // 获得菜单列表
   await getTree()
+  await getBackendModelList()
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
@@ -200,6 +222,9 @@ const submitForm = async () => {
           return
         }
       }
+    }
+    if (backendModelId.value) {
+      fillBackendModelComponent(backendModelId.value)
     }
     const data = formData.value as unknown as MenuApi.MenuVO
     if (formType.value === 'create') {
@@ -229,6 +254,36 @@ const getTree = async () => {
   menuTree.value.push(menu)
 }
 
+/** 获取后台模型下拉数据 */
+const getBackendModelList = async () => {
+  const data = await BackendModelApi.getBackendModelPage({
+    pageNo: 1,
+    pageSize: 200,
+    status: CommonStatusEnum.ENABLE
+  })
+  backendModelList.value = data.list || []
+}
+
+const handleBackendModelChange = (id?: string | number) => {
+  if (!id) {
+    return
+  }
+  fillBackendModelComponent(String(id))
+}
+
+const fillBackendModelComponent = (id: string) => {
+  formData.value.component = `infra/backendModel/view?modelId=${id}`
+  formData.value.componentName = `InfraBackendModelView${id}`
+}
+
+const parseBackendModelId = (component?: string) => {
+  if (!component?.startsWith('infra/backendModel/view?')) {
+    return undefined
+  }
+  const query = component.split('?')[1]
+  return new URLSearchParams(query).get('modelId') || undefined
+}
+
 /** 重置表单 */
 const resetForm = () => {
   formData.value = {
@@ -247,6 +302,7 @@ const resetForm = () => {
     keepAlive: true,
     alwaysShow: true
   }
+  backendModelId.value = undefined
   formRef.value?.resetFields()
 }
 
