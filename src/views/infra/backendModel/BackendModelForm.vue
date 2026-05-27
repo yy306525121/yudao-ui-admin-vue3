@@ -53,9 +53,9 @@
       <el-table :data="previewRows" max-height="260">
         <el-table-column
           v-for="field in previewFields"
-          :key="field.name"
-          :label="field.label"
-          :prop="field.name"
+          :key="field.name || field.fieldName"
+          :label="field.label || field.fieldLabel"
+          :prop="field.name || field.fieldName"
           min-width="140"
           show-overflow-tooltip
         />
@@ -93,7 +93,8 @@ const formData = ref<BackendModelApi.BackendModelVO>({
   dataSourceConfigId: undefined,
   sqlText: '',
   status: CommonStatusEnum.ENABLE,
-  remark: ''
+  remark: '',
+  fields: []
 })
 const formRules = reactive({
   name: [{ required: true, message: '模型名称不能为空', trigger: 'blur' }],
@@ -174,7 +175,8 @@ const resetForm = () => {
     dataSourceConfigId: undefined,
     sqlText: '',
     status: CommonStatusEnum.ENABLE,
-    remark: ''
+    remark: '',
+    fields: []
   }
   previewFields.value = []
   previewRows.value = []

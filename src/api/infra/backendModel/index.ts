@@ -8,11 +8,22 @@ export interface BackendModelVO {
   status: number
   remark?: string
   createTime?: Date
+  fields?: BackendModelField[]
 }
 
 export interface BackendModelField {
-  name: string
-  label: string
+  id?: number | string
+  fieldName: string
+  fieldLabel: string
+  fieldOrder: number
+  listVisible: boolean
+  searchable: boolean
+  searchType: string
+  searchOperator: string
+  dictType?: string
+  status: number
+  name?: string
+  label?: string
 }
 
 export interface BackendModelQueryRespVO {
@@ -27,7 +38,7 @@ export const getBackendModelPage = (params: any) => {
   return request.get({ url: '/infra/backend-model/page', params })
 }
 
-export const getBackendModel = (id: number) => {
+export const getBackendModel = (id: number | string) => {
   return request.get({ url: '/infra/backend-model/get?id=' + id })
 }
 
@@ -37,6 +48,13 @@ export const createBackendModel = (data: BackendModelVO) => {
 
 export const updateBackendModel = (data: BackendModelVO) => {
   return request.put({ url: '/infra/backend-model/update', data })
+}
+
+export const updateBackendModelFields = (data: {
+  id: number | string
+  fields: BackendModelField[]
+}) => {
+  return request.put({ url: '/infra/backend-model/update-fields', data })
 }
 
 export const deleteBackendModel = (id: number) => {
@@ -56,6 +74,15 @@ export const previewBackendModel = (data: {
   return request.post({ url: '/infra/backend-model/preview', data })
 }
 
-export const queryBackendModelPage = (params: { id: string; pageNo: number; pageSize: number }) => {
+export const queryBackendModelPage = (params: {
+  id: string
+  pageNo: number
+  pageSize: number
+  [key: string]: any
+}) => {
   return request.get({ url: '/infra/backend-model/page', params })
+}
+
+export const exportBackendModel = (params: { id: string; [key: string]: any }) => {
+  return request.download({ url: '/infra/backend-model/export-excel', params })
 }

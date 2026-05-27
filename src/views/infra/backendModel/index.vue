@@ -100,7 +100,7 @@
         width="180"
         :formatter="dateFormatter"
       />
-      <el-table-column label="操作" align="center" width="160">
+      <el-table-column label="操作" align="center" width="220">
         <template #default="scope">
           <el-button
             v-hasPermi="['infra:backend-model:update']"
@@ -109,6 +109,14 @@
             @click="openForm('update', scope.row.id)"
           >
             编辑
+          </el-button>
+          <el-button
+            v-hasPermi="['infra:backend-model:update']"
+            link
+            type="primary"
+            @click="openFieldForm(scope.row.id)"
+          >
+            字段列表
           </el-button>
           <el-button
             v-hasPermi="['infra:backend-model:delete']"
@@ -130,6 +138,7 @@
   </ContentWrap>
 
   <BackendModelForm ref="formRef" @success="getList" />
+  <BackendModelFieldForm ref="fieldFormRef" @success="getList" />
 </template>
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
@@ -137,6 +146,7 @@ import { dateFormatter } from '@/utils/formatTime'
 import * as BackendModelApi from '@/api/infra/backendModel'
 import * as DataSourceConfigApi from '@/api/infra/dataSourceConfig'
 import BackendModelForm from './BackendModelForm.vue'
+import BackendModelFieldForm from './BackendModelFieldForm.vue'
 
 defineOptions({ name: 'InfraBackendModel' })
 
@@ -189,6 +199,11 @@ const resetQuery = () => {
 const formRef = ref()
 const openForm = (type: string, id?: number) => {
   formRef.value.open(type, id)
+}
+
+const fieldFormRef = ref()
+const openFieldForm = (id: number | string) => {
+  fieldFormRef.value.open(id)
 }
 
 const handleDelete = async (id: number) => {
