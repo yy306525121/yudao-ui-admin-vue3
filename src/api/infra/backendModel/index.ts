@@ -17,6 +17,7 @@ export interface BackendModelField {
   fieldLabel: string
   fieldOrder: number
   listVisible: boolean
+  listType?: string
   searchable: boolean
   searchType: string
   searchOperator: string

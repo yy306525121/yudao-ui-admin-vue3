@@ -17,6 +17,17 @@
           <el-switch v-model="row.listVisible" />
         </template>
       </el-table-column>
+      <el-table-column label="列表类型" min-width="130">
+        <template #default="{ row }">
+          <el-select v-model="row.listType">
+            <el-option label="文本" value="text" />
+            <el-option label="数字" value="number" />
+            <el-option label="日期" value="date" />
+            <el-option label="日期时间" value="datetime" />
+            <el-option label="字典" value="dict" />
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="检索条件" width="100">
         <template #default="{ row }">
           <el-switch v-model="row.searchable" />
@@ -49,7 +60,10 @@
       </el-table-column>
       <el-table-column label="字典类型" min-width="160">
         <template #default="{ row }">
-          <el-input v-model="row.dictType" :disabled="row.searchType !== 'dict'" />
+          <el-input
+            v-model="row.dictType"
+            :disabled="row.listType !== 'dict' && row.searchType !== 'dict'"
+          />
         </template>
       </el-table-column>
       <el-table-column label="状态" min-width="120">
@@ -93,7 +107,10 @@ const open = async (id: number | string) => {
   formLoading.value = true
   try {
     const data = await BackendModelApi.getBackendModel(id)
-    fieldList.value = data.fields || []
+    fieldList.value = (data.fields || []).map((field) => ({
+      ...field,
+      listType: field.listType || inferListType(field.searchType)
+    }))
   } finally {
     formLoading.value = false
   }
@@ -115,5 +132,11 @@ const submitForm = async () => {
   } finally {
     formLoading.value = false
   }
+}
+
+const inferListType = (searchType?: string) => {
+  if (searchType === 'date') return 'date'
+  if (searchType === 'date_range') return 'datetime'
+  return 'text'
 }
 </script>

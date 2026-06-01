@@ -75,6 +75,7 @@
         :key="getFieldName(field)"
         :label="getFieldLabel(field)"
         :prop="getFieldName(field)"
+        :formatter="(_row, _column, cellValue) => formatFieldValue(field, cellValue)"
         min-width="140"
         show-overflow-tooltip
       />
@@ -92,6 +93,7 @@ import * as BackendModelApi from '@/api/infra/backendModel'
 import { CommonStatusEnum } from '@/utils/constants'
 import { getStrDictOptions } from '@/utils/dict'
 import download from '@/utils/download'
+import { dateUtil } from '@/utils/dateUtil'
 
 defineOptions({ name: 'InfraBackendModelView' })
 
@@ -121,6 +123,50 @@ const searchFields = computed(() =>
 const getFieldName = (field: BackendModelApi.BackendModelField) => field.fieldName || field.name || ''
 const getFieldLabel = (field: BackendModelApi.BackendModelField) =>
   field.fieldLabel || field.label || getFieldName(field)
+const formatFieldValue = (field: BackendModelApi.BackendModelField, value: any) => {
+  if (value === undefined || value === null || value === '') {
+    return ''
+  }
+  const listType = getListType(field)
+  if (listType !== 'date' && listType !== 'datetime') {
+    return value
+  }
+  const dateValue = normalizeDateValue(value)
+  if (!dateValue) {
+    return value
+  }
+  return dateUtil(dateValue).format(listType === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss')
+}
+
+const getListType = (field: BackendModelApi.BackendModelField) => {
+  if (field.listType) return field.listType
+  if (field.searchType === 'date') return 'date'
+  if (field.searchType === 'date_range') return 'datetime'
+  return 'text'
+}
+
+const normalizeDateValue = (value: any) => {
+  if (value instanceof Date) {
+    return value
+  }
+  if (typeof value === 'number') {
+    return normalizeNumberDateValue(value)
+  }
+  if (typeof value === 'string' && /^\d+$/.test(value)) {
+    return normalizeNumberDateValue(Number(value))
+  }
+  return dateUtil(value).isValid() ? value : undefined
+}
+
+const normalizeNumberDateValue = (value: number) => {
+  const text = String(value)
+  if (/^\d{8}$/.test(text)) {
+    const dateText = `${text.slice(0, 4)}-${text.slice(4, 6)}-${text.slice(6, 8)}`
+    return dateUtil(dateText).isValid() ? dateText : undefined
+  }
+  const timestamp = text.length === 10 ? value * 1000 : value
+  return dateUtil(timestamp).isValid() ? timestamp : undefined
+}
 
 const getList = async () => {
   if (!modelId.value) {
