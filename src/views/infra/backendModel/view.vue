@@ -75,10 +75,14 @@
         :key="getFieldName(field)"
         :label="getFieldLabel(field)"
         :prop="getFieldName(field)"
-        :formatter="(_row, _column, cellValue) => formatFieldValue(field, cellValue)"
-        min-width="140"
-        show-overflow-tooltip
-      />
+        :width="getColumnWidth(field)"
+      >
+        <template #default="{ row }">
+          <div class="backend-model-table-cell">
+            {{ formatFieldValue(field, row[getFieldName(field)]) }}
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
     <Pagination
       v-model:limit="queryParams.pageSize"
@@ -123,6 +127,22 @@ const searchFields = computed(() =>
 const getFieldName = (field: BackendModelApi.BackendModelField) => field.fieldName || field.name || ''
 const getFieldLabel = (field: BackendModelApi.BackendModelField) =>
   field.fieldLabel || field.label || getFieldName(field)
+const getColumnWidth = (field: BackendModelApi.BackendModelField) => {
+  const fieldName = getFieldName(field)
+  const labelLength = getDisplayLength(getFieldLabel(field))
+  const contentLength = list.value.reduce((maxLength, row) => {
+    return Math.max(maxLength, getDisplayLength(formatFieldValue(field, row[fieldName])))
+  }, labelLength)
+  return Math.min(Math.max(contentLength * 8 + 48, 140), 1200)
+}
+
+const getDisplayLength = (value: any) => {
+  const text = value === undefined || value === null ? '' : String(value)
+  return Array.from(text).reduce((length, char) => {
+    return length + (char.charCodeAt(0) > 255 ? 2 : 1)
+  }, 0)
+}
+
 const formatFieldValue = (field: BackendModelApi.BackendModelField, value: any) => {
   if (value === undefined || value === null || value === '') {
     return ''
@@ -253,3 +273,9 @@ onMounted(() => {
   getList()
 })
 </script>
+<style scoped>
+.backend-model-table-cell {
+  line-height: 22px;
+  white-space: nowrap;
+}
+</style>

@@ -131,7 +131,7 @@ const submitForm = async () => {
   if (!valid) return
   formLoading.value = true
   try {
-    const data = formData.value as BackendModelApi.BackendModelVO
+    const { fields: _fields, ...data } = formData.value as BackendModelApi.BackendModelVO
     if (formType.value === 'create') {
       await BackendModelApi.createBackendModel(data)
       message.success(t('common.createSuccess'))
