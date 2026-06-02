@@ -60,10 +60,20 @@
       </el-table-column>
       <el-table-column label="字典类型" min-width="160">
         <template #default="{ row }">
-          <el-input
+          <el-select
             v-model="row.dictType"
             :disabled="row.listType !== 'dict' && row.searchType !== 'dict'"
-          />
+            clearable
+            filterable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="dictType in dictTypeList"
+              :key="dictType.type"
+              :label="dictType.name"
+              :value="dictType.type"
+            />
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="状态" min-width="120">
@@ -89,6 +99,7 @@
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as BackendModelApi from '@/api/infra/backendModel'
+import * as DictTypeApi from '@/api/system/dict/dict.type'
 
 defineOptions({ name: 'InfraBackendModelFieldForm' })
 
@@ -99,6 +110,7 @@ const dialogVisible = ref(false)
 const formLoading = ref(false)
 const modelId = ref<number | string>()
 const fieldList = ref<BackendModelApi.BackendModelField[]>([])
+const dictTypeList = ref<DictTypeApi.DictTypeVO[]>([])
 
 const open = async (id: number | string) => {
   dialogVisible.value = true
@@ -106,7 +118,11 @@ const open = async (id: number | string) => {
   fieldList.value = []
   formLoading.value = true
   try {
-    const data = await BackendModelApi.getBackendModel(id)
+    const [data, dictTypes] = await Promise.all([
+      BackendModelApi.getBackendModel(id),
+      DictTypeApi.getSimpleDictTypeList()
+    ])
+    dictTypeList.value = dictTypes || []
     fieldList.value = (data.fields || []).map((field) => ({
       ...field,
       listType: field.listType || inferListType(field.searchType)

@@ -95,7 +95,7 @@
 <script lang="ts" setup>
 import * as BackendModelApi from '@/api/infra/backendModel'
 import { CommonStatusEnum } from '@/utils/constants'
-import { getStrDictOptions } from '@/utils/dict'
+import { getDictOptions, getStrDictOptions } from '@/utils/dict'
 import download from '@/utils/download'
 import { dateUtil } from '@/utils/dateUtil'
 
@@ -148,6 +148,9 @@ const formatFieldValue = (field: BackendModelApi.BackendModelField, value: any) 
     return ''
   }
   const listType = getListType(field)
+  if (listType === 'dict') {
+    return formatDictValue(field, value)
+  }
   if (listType !== 'date' && listType !== 'datetime') {
     return value
   }
@@ -156,6 +159,20 @@ const formatFieldValue = (field: BackendModelApi.BackendModelField, value: any) 
     return value
   }
   return dateUtil(dateValue).format(listType === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss')
+}
+
+const formatDictValue = (field: BackendModelApi.BackendModelField, value: any) => {
+  if (!field.dictType) {
+    return value
+  }
+  const dictOptions = getDictOptions(field.dictType)
+  if (!dictOptions.length) {
+    return value
+  }
+  const text = String(value)
+  const values = text.includes(',') ? text.split(',').map((item) => item.trim()) : [text]
+  const labels = values.map((item) => dictOptions.find((dict) => dict.value === item)?.label || item)
+  return labels.join(',')
 }
 
 const getListType = (field: BackendModelApi.BackendModelField) => {
