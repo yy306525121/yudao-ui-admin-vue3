@@ -12,6 +12,16 @@ export interface FilePresignedUrlRespVO {
   path: string
 }
 
+// 存储文件 Response VO
+export interface FileStorageItemVO {
+  name: string
+  path: string
+  directory: boolean
+  size?: number
+  lastModifiedTime?: Date
+  url?: string
+}
+
 // 查询文件列表
 export const getFilePage = (params: PageParam) => {
   return request.get({ url: '/infra/file/page', params })
@@ -43,4 +53,33 @@ export const createFile = (data: any) => {
 // 上传文件
 export const updateFile = (data: any, onUploadProgress?: Function) => {
   return request.upload({ url: '/infra/file/upload', data, onUploadProgress })
+}
+
+// 查询存储文件列表
+export const getStorageFileList = (params: {
+  configId: number
+  path?: string
+  keyword?: string
+}) => {
+  return request.get<FileStorageItemVO[]>({ url: '/infra/file/storage/list', params })
+}
+
+// 上传文件到指定存储配置
+export const uploadStorageFile = (data: any, onUploadProgress?: Function) => {
+  return request.upload({ url: '/infra/file/storage/upload', data, onUploadProgress })
+}
+
+// 下载存储文件
+export const downloadStorageFile = (params: { configId: number; path: string }) => {
+  return request.download({ url: '/infra/file/storage/download', params })
+}
+
+// 重命名存储文件
+export const renameStorageFile = (data: { configId: number; path: string; newName: string }) => {
+  return request.put({ url: '/infra/file/storage/rename', data })
+}
+
+// 删除存储文件
+export const deleteStorageFile = (params: { configId: number; path: string }) => {
+  return request.delete({ url: '/infra/file/storage/delete', params })
 }
