@@ -71,7 +71,9 @@
   <ContentWrap>
     <el-table v-loading="loading" :data="list">
       <el-table-column
+        align="center"
         v-for="field in listFields"
+        header-align="center"
         :key="getFieldName(field)"
         :label="getFieldLabel(field)"
         :prop="getFieldName(field)"
@@ -296,6 +298,7 @@ onMounted(() => {
 <style scoped>
 .backend-model-table-cell {
   line-height: 22px;
+  text-align: center;
   white-space: nowrap;
 }
 </style>
