@@ -12,10 +12,21 @@ const download0 = (data: Blob, fileName: string, mineType: string) => {
   window.URL.revokeObjectURL(href)
 }
 
+const normalizeExcelFileName = (fileName: string) => {
+  if (!fileName) return 'export.xlsx'
+  if (fileName.toLowerCase().endsWith('.xlsx')) return fileName
+  if (fileName.toLowerCase().endsWith('.xls')) return `${fileName.slice(0, -4)}.xlsx`
+  return `${fileName}.xlsx`
+}
+
 const download = {
   // 下载 Excel 方法
   excel: (data: Blob, fileName: string) => {
-    download0(data, fileName, 'application/vnd.ms-excel')
+    download0(
+      data,
+      normalizeExcelFileName(fileName),
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
   },
   // 下载 Word 方法
   word: (data: Blob, fileName: string) => {

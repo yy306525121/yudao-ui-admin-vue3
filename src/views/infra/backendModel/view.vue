@@ -110,6 +110,7 @@ const total = ref(0)
 const fields = ref<BackendModelApi.BackendModelField[]>([])
 const list = ref<Record<string, any>[]>([])
 const modelId = computed(() => String((route.meta as any)?.query?.modelId || route.query?.modelId || ''))
+const menuName = computed(() => sanitizeFileName(String(route.meta?.title || '后台模型数据')))
 const searchValues = reactive<Record<string, any>>({})
 const queryParams = reactive({
   pageNo: 1,
@@ -127,6 +128,7 @@ const searchFields = computed(() =>
 const getFieldName = (field: BackendModelApi.BackendModelField) => field.fieldName || field.name || ''
 const getFieldLabel = (field: BackendModelApi.BackendModelField) =>
   field.fieldLabel || field.label || getFieldName(field)
+const sanitizeFileName = (value: string) => value.replace(/[\\/:*?"<>|\r\n]+/g, '_') || '后台模型数据'
 const getColumnWidth = (field: BackendModelApi.BackendModelField) => {
   const fieldName = getFieldName(field)
   const labelLength = getDisplayLength(getFieldLabel(field))
@@ -270,9 +272,10 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await BackendModelApi.exportBackendModel({
       id: modelId.value,
+      menuName: menuName.value,
       ...buildSearchParams()
     })
-    download.excel(data, '后台模型数据.xls')
+    download.excel(data, `${menuName.value}.xlsx`)
   } finally {
     exportLoading.value = false
   }
